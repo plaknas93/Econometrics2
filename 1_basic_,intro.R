@@ -64,16 +64,31 @@ chart.Correlation(my_data, histogram=TRUE, pch=19)
 ## This is what Econometrics is all about.
 
 ## Let us consider an example
-data=mtcars
+data=women
 head(data)
 chart.Correlation(data, histogram=TRUE, pch=19)
 
 ## For simplicity let us choose two variables with a positive relationship
-## mpg and drat
 library(ggplot2)
 ?ggplot
-ggplot(data=data,aes(y=mpg,x=drat))+geom_point(col='dark green')+xlab("drat")+ylab("Miles per gallon")+ggtitle("Scatter Plot: drat vs MPG")
+ggplot(data=data,aes(y=weight,x=height))+geom_point(col='dark green')+xlab("Height")+ylab("Weight")+ggtitle("Scatter Plot: Ht vs Wt")
+covarianc=cov(data$height,data$weight)
+correl=cor(data$height,data$weight)
 
 
+beta=covarianc/var(data$height)
+beta
 
-       
+alpha=mean(data$weight)-(beta*mean(data$height))       
+alpha
+
+fit=lm(data$weight~data$height,data=data)
+fit
+summary(fit)
+ggplot(data=data,aes(y=data$weight,x=data$height))+geom_point(col='red',size=3)+xlab("Height")+ylab("Weight")+ggtitle("Regression Plot: Ht vs Wt")+geom_smooth(method='lm',se=FALSE,col='blue')
+
+plot(fit, which=1, col=c("blue")) # Residuals vs Fitted Plot
+plot(fit, which=2, col=c("red"))  # Q-Q Plot
+plot(fit, which=3, col=c("blue"))  # Scale-Location Plot Checks Homoskadasticity
+plot(fit, which=4, col=c("blue"))  # Scale-Location Plot
+plot(fit, which=5, col=c("blue"))  # Residuals vs Leverage
