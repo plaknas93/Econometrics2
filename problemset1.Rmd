@@ -1,5 +1,21 @@
 
+#Problem Set 1: Answers and Analysis using R
+##R edit by RJ Neel
+##Original Author: Ben Lambert
 
+###Getting started with R
+R is a free programming language used for statistical analysis (and much more). Other softwares used for statistical analysis are Gretl, IBM SPSS, MATLAB, Python and many more. Python is the leading data analysis language. R is popular among academics.
+
+The following link covers all the necessary information regarding R and R studio installation
+Link:https://www.youtube.com/watch?v=9-RrkJQQYqY
+
+###The Crime-Unemployment data set
+
+Let's begin by 
+```{r}
+#Crime Unemployment data analysis
+
+#Read
 data=read.csv(file="D:/RWorks/Econometrics2/Datasets/problemset1.csv")
 head(data)
 
@@ -33,47 +49,3 @@ hist(data$Violence,col='light green',main = "Histogram of Violence",xlab = 'Viol
 
 # Simple Quantification
 cor(data$Unemployment,data$Violence)
-
-
-# Talk to database use dplyr
-library(tidyverse)
-library(dplyr)
-
-#State with the highest crime rate
-max(data$Violence)
-data %>% select(State,Violence) %>% filter(Violence==max(Violence))
-
-
-# Run Regression
-fit=lm(data,formula=data$Violence~data$Unemployment)
-summary(fit)
-
-# Q8: Coeff of Unemployment?
-b=fit$coefficients
-b[2] #Coeff of Unemployment
-
-#Interpretation : For 1% increase in unemployment an additional 53 cases of increase in crime can be expected
-
-# Q9: Effect of 1 std deviation increase in Unemployment
-sd(data$Unemployment)
-#Thus, we need to find the change in Violence for 1.5 increase in Unemployment
-1.54*53 #Approx 82.
-sd(data$Violence)
-82/195 #Increase in std deviation of violence
-
-# Q10: Effect of 1 std deviation increase in Violence
-fit2=lm(data,formula=data$Unemployment~data$Violence)
-summary(fit2)
-0.003*sd(data$Violence) # = 0.58 is the effect of sd on Uneployment
-
-# Can fit2 be rearrange to calculate violence?
-## NO By fit1: V = 24.4+53.35*U and fit2: U=5.48+.003*V
-## Rearranging fit2
-.003^(-1) #333.33
-5.48/.003 #1826.67
-# Yielding : V=-1826.67+333.33U
-#
-
-# Q 11: Does Unemployment CAUSE Violence?
-## Regression does not infer causality. It may or may not be the case or it may simply happen that a third  factor causes both
-
