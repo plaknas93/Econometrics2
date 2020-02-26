@@ -2,8 +2,11 @@
 # Code by RJ Neel
 
 ## Computer Exercise C1
+library(wooldridge) #load the Woolridge Package
+wage1
+head(wage1) #First 6 rows. Easy to view
+View(wage1) #Whole dataset view
 
-head(data)
 
 #Find the average education level in the sample. What are the lowest and highest years of education?
 summary(data$educ)
