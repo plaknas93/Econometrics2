@@ -39,6 +39,46 @@
   breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
 \usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -73,45 +113,616 @@
 
 \begin{document}
 
-\#Introductory Econometrics: Chaper 1 \#\# Author: J M Woolride \#\# R
-Code Compilation by RJ Neel
+\hypertarget{introductory-econometrics-chapter-1}{%
+\subsection{Introductory Econometrics: Chapter
+1}\label{introductory-econometrics-chapter-1}}
 
-\hypertarget{this-text-solves-the-listed-computer-exercise-at-the-end-of-each-chapter.}{%
-\subsubsection{This text solves the listed Computer Exercise at the end
-of each
-chapter.}\label{this-text-solves-the-listed-computer-exercise-at-the-end-of-each-chapter.}}
+\hypertarget{author-j-m-woolridge}{%
+\subsection{Author: J M Woolridge}\label{author-j-m-woolridge}}
 
-\hypertarget{exercise-1}{%
-\subsubsection{Exercise 1}\label{exercise-1}}
+\hypertarget{r-code-compilation-by-rj-neel}{%
+\subsection{R Code Compilation by RJ
+Neel}\label{r-code-compilation-by-rj-neel}}
 
-C1: Use the data in WAGE1 for this exercise.
+\hypertarget{end-of-chapter-1-exercises-page-39}{%
+\section{End of Chapter 1 exercises (Page
+39)}\label{end-of-chapter-1-exercises-page-39}}
+
+\hypertarget{computer-exercises}{%
+\subsubsection{Computer Exercises}\label{computer-exercises}}
+
+\textbf{C1: Use the data in WAGE1 for this exercise}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{## Computer Exercise C1}
+\KeywordTok{library}\NormalTok{(wooldridge) }\CommentTok{#load the Woolridge Package}
+\NormalTok{wage1}
+\NormalTok{?wage1 }\CommentTok{#Description of the dataset}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
-## Computer Exercise C1
-library(wooldridge) #load the Woolridge Package
-wage1
-head(wage1) #First 6 rows. Easy to view
-View(wage1) #Whole dataset view
+## starting httpd help server ... done
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(wage1) }\CommentTok{#First 6 rows. Easy to view}
+\KeywordTok{ncol}\NormalTok{(wage1) }\CommentTok{# No of rows}
+\KeywordTok{nrow}\NormalTok{(wage1) }\CommentTok{#No. of columns}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{(i) Find the average education level in the sample. What are the
+lowest and highest years of education?}
+
+\emph{Solution}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(wage1}\OperatorTok{$}\NormalTok{educ)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    0.00   12.00   12.00   12.56   14.00   18.00
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Alternatively}
+\KeywordTok{mean}\NormalTok{(wage1}\OperatorTok{$}\NormalTok{educ) }\CommentTok{#avg education level}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 12.56274
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{min}\NormalTok{(wage1}\OperatorTok{$}\NormalTok{educ) }\CommentTok{#min education leve}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{max}\NormalTok{(wage1}\OperatorTok{$}\NormalTok{educ) }\CommentTok{#max}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 18
+\end{verbatim}
+
+\textbf{(ii) Find the average hourly wage in the sample. Does it seem
+high or low? }
+
+\emph{Solution}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{mean}\NormalTok{(wage1}\OperatorTok{$}\NormalTok{wage) }\CommentTok{#Gives you the average hourly wage }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5.896103
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(wage1}\OperatorTok{$}\NormalTok{wage) }\CommentTok{#Wage appears to be low}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   0.530   3.330   4.650   5.896   6.880  24.980
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(wage1}\OperatorTok{$}\NormalTok{wage) }\CommentTok{#Clearly skewed towards right}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{woolridge_c1_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\textbf{(iii) The wage data are reported in 1976 dollars. Using the
+Internet or a printed source, find the Consumer Price Index (CPI) for
+the years 1976 and 2013.}
+
+\emph{Solution} Using Table B-60 in the 2004 Economic Report of the
+President, the CPI was 56.9 in 1976 and 233 in 2013.
+
+\textbf{(iv) Use the CPI values from part (iii) to find the average
+hourly wage in 2013 dollars. Now does the average hourly wage seem
+reasonable? }
+
+\emph{Solution} To convert 1976 dollars into 2013 dollars, we use the
+ratio of the CPIs, which is 233/56.9 ≈ 4.09. Therefore, the average
+hourly wage in 2013 dollars is roughly 4.09(\$\textbackslash{}5.90)
+≈~\$\textbackslash{}24.13, which is a reasonable figure.
+
+\textbf{(v) How many women are in the sample? How many men?}
+
+\emph{Solution}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(wage1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   wage educ exper tenure nonwhite female married numdep smsa northcen south
+## 1 3.10   11     2      0        0      1       0      2    1        0     0
+## 2 3.24   12    22      2        0      1       1      3    1        0     0
+## 3 3.00   11     2      0        0      0       0      2    0        0     0
+## 4 6.00    8    44     28        0      0       1      0    1        0     0
+## 5 5.30   12     7      2        0      0       1      1    0        0     0
+## 6 8.75   16     9      8        0      0       1      0    1        0     0
+##   west construc ndurman trcommpu trade services profserv profocc clerocc
+## 1    1        0       0        0     0        0        0       0       0
+## 2    1        0       0        0     0        1        0       0       0
+## 3    1        0       0        0     1        0        0       0       0
+## 4    1        0       0        0     0        0        0       0       1
+## 5    1        0       0        0     0        0        0       0       0
+## 6    1        0       0        0     0        0        1       1       0
+##   servocc    lwage expersq tenursq
+## 1       0 1.131402       4       0
+## 2       1 1.175573     484       4
+## 3       0 1.098612       4       0
+## 4       0 1.791759    1936     784
+## 5       0 1.667707      49       4
+## 6       0 2.169054      81      64
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Notice the female column is a binary variable implying 1 for female and 0 for male requring us to proceed with 'dplyr'}
+\KeywordTok{library}\NormalTok{(dplyr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'dplyr'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{w=}\KeywordTok{nrow}\NormalTok{(wage1 }\OperatorTok{%>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(female) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(female}\OperatorTok{==}\StringTok{'1'}\NormalTok{))}
+\NormalTok{w}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 252
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{m=}\KeywordTok{nrow}\NormalTok{(wage1)}\OperatorTok{-}\NormalTok{w}
+\NormalTok{m}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 274
+\end{verbatim}
+
+End of Computer Exercise 1
+
+\textbf{C2: Use the data in BWGHT to answer this question}
+
+\begin{enumerate}
+\def\labelenumi{(\roman{enumi})}
+\tightlist
+\item
+  How many women are in the sample, and how many report smoking during
+  pregnancy?
+\end{enumerate}
+
+\emph{Solution}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Note: This data set contains all women}
+\KeywordTok{nrow}\NormalTok{(bwght) }\CommentTok{#No of women smoking}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1388
 \end{verbatim}
 
 \begin{enumerate}
 \def\labelenumi{(\roman{enumi})}
+\setcounter{enumi}{1}
+\tightlist
 \item
-  Find the average education level in the sample. What are the lowest
-  and highest years of education?
-\item
-  Find the average hourly wage in the sample. Does it seem high or low?
-\item
-  The wage data are reported in 1976 dollars. Using the Internet or a
-  printed source, find the Consumer Price Index (CPI) for the years 1976
-  and 2013.
-\item
-  Use the CPI values from part (iii) to find the average hourly wage in
-  2013 dollars. Now does the average hourly wage seem reasonable?
-\item
-  How many women are in the sample? How many men?
+  What is the average number of cigarettes smoked per day? Is the
+  average a good measure of the ``typical'' woman in this case? Explain.
 \end{enumerate}
 
-(Page 39).
+\emph{Solution}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{mean}\NormalTok{(bwght}\OperatorTok{$}\NormalTok{cigs)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2.087176
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(bwght}\OperatorTok{$}\NormalTok{cigs)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   0.000   0.000   0.000   2.087   0.000  50.000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(bwght}\OperatorTok{$}\NormalTok{cigs)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{woolridge_c1_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Based on the histogram and range it appears to be a good measure.}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{(\roman{enumi})}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Among women who smoked during pregnancy, what is the average number of
+  cigarettes smoked per day? How does this compare with your answer from
+  part (ii), and why?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{avg_all=}\KeywordTok{mean}\NormalTok{(bwght}\OperatorTok{$}\NormalTok{cigs)}
+\NormalTok{avg_all}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2.087176
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(dplyr)}
+\KeywordTok{nrow}\NormalTok{(bwght }\OperatorTok{%>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(cigs) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(cigs}\OperatorTok{==}\StringTok{'0'}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1176
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{s=(bwght }\OperatorTok{%>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(cigs) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(cigs}\OperatorTok{>}\StringTok{'0'}\NormalTok{))}
+\NormalTok{avg_s=}\KeywordTok{mean}\NormalTok{(s}\OperatorTok{$}\NormalTok{cigs)}
+\NormalTok{avg_s}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 13.66509
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(s}\OperatorTok{$}\NormalTok{cigs, }\DataTypeTok{xlab=}\StringTok{'Pregnant Women Smokers'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{woolridge_c1_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#It markedly differs from the privious average by about 11 units.}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{C3 The data in MEAP01 are for the state of Michigan in the year
+2001. Use these data to answer the following questions.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(meap01)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   dcode bcode math4 read4 lunch enroll  expend    exppp  lenroll  lexpend
+## 1  1010  4937  83.3  77.8 40.60    468 2747475 5870.673 6.148468 14.82619
+## 2  2070   597  90.3  82.3 27.10    679 1505772 2217.632 6.520621 14.22482
+## 3  2080  4860  61.9  71.4 41.75    400 2121871 5304.678 5.991465 14.56781
+## 4  3010   790  85.7  60.0 12.75    251 1211034 4824.836 5.525453 14.00698
+## 5  3010  1403  77.3  59.1 17.08    439 1913501 4358.772 6.084499 14.46445
+## 6  3010  4056  85.2  67.0 23.17    561 2637483 4701.396 6.329721 14.78534
+##     lexppp
+## 1 8.677725
+## 2 7.704195
+## 3 8.576344
+## 4 8.481532
+## 5 8.379946
+## 6 8.455615
+\end{verbatim}
+
+\textbf{(i) Find the largest and smallest values of math4. Does the
+range make sense? Explain. }
+
+\emph{Solution}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(meap01)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   dcode bcode math4 read4 lunch enroll  expend    exppp  lenroll  lexpend
+## 1  1010  4937  83.3  77.8 40.60    468 2747475 5870.673 6.148468 14.82619
+## 2  2070   597  90.3  82.3 27.10    679 1505772 2217.632 6.520621 14.22482
+## 3  2080  4860  61.9  71.4 41.75    400 2121871 5304.678 5.991465 14.56781
+## 4  3010   790  85.7  60.0 12.75    251 1211034 4824.836 5.525453 14.00698
+## 5  3010  1403  77.3  59.1 17.08    439 1913501 4358.772 6.084499 14.46445
+## 6  3010  4056  85.2  67.0 23.17    561 2637483 4701.396 6.329721 14.78534
+##     lexppp
+## 1 8.677725
+## 2 7.704195
+## 3 8.576344
+## 4 8.481532
+## 5 8.379946
+## 6 8.455615
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(meap01}\OperatorTok{$}\NormalTok{math4) }\CommentTok{# It makes sense as percentage is between 0 and 100}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    0.00   61.60   76.40   71.91   87.00  100.00
+\end{verbatim}
+
+\textbf{(ii) How many schools have a perfect pass rate on the math test?
+What percentage is this of the total sample? }
+
+\emph{Solution}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(dplyr)}
+\NormalTok{passrate100=}\KeywordTok{nrow}\NormalTok{(meap01 }\OperatorTok{%>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(math4) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(math4}\OperatorTok{==}\StringTok{'100'}\NormalTok{))}
+\NormalTok{passrate100}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 38
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{samplesize=}\KeywordTok{nrow}\NormalTok{(meap01)}
+\NormalTok{samplesize}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1823
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{percent_passrate=}\KeywordTok{round}\NormalTok{((passrate100}\OperatorTok{/}\NormalTok{samplesize)}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{)}
+\NormalTok{percent_passrate}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2.08
+\end{verbatim}
+
+\textbf{(iii) How many schools have math pass rates of exactly 50\%? }
+
+\emph{Solution}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(dplyr)}
+
+\KeywordTok{nrow}\NormalTok{(meap01 }\OperatorTok{%>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(math4) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{filter}\NormalTok{(math4}\OperatorTok{==}\StringTok{'50'}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 17
+\end{verbatim}
+
+\textbf{(iv) Compare the average pass rates for the math and reading
+scores. Which test is harder to pass? }
+
+\emph{Solution}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pass_m=}\KeywordTok{mean}\NormalTok{(meap01}\OperatorTok{$}\NormalTok{math4)}
+\NormalTok{pass_m}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 71.909
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pass_r=}\KeywordTok{mean}\NormalTok{(meap01}\OperatorTok{$}\NormalTok{read4)}
+\NormalTok{pass_r}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 60.06188
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Cleary Reading is much more difficult to pass}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{(v) Find the correlation between math4 and read4. What do you
+conclude? }
+
+\emph{Solution}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cor}\NormalTok{(meap01}\OperatorTok{$}\NormalTok{math4,meap01}\OperatorTok{$}\NormalTok{read4)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.8427281
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data=}\NormalTok{meap01,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{meap01}\OperatorTok{$}\NormalTok{math4,}\DataTypeTok{y=}\NormalTok{meap01}\OperatorTok{$}\NormalTok{read4))}\OperatorTok{+}\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{col=}\StringTok{'salmon'}\NormalTok{)}\OperatorTok{+}\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Scatterplot: Maths vs Reading"}\NormalTok{)}\OperatorTok{+}\KeywordTok{xlab}\NormalTok{(}\StringTok{"Math Score"}\NormalTok{)}\OperatorTok{+}\KeywordTok{ylab}\NormalTok{(}\StringTok{"Reading Score"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{woolridge_c1_files/figure-latex/unnamed-chunk-13-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#It is strongly positive}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{(vi) The variable exppp is expenditure per pupil. Find the
+average of exppp along with its standard deviation. Would you say there
+is wide variation in per pupil spending? }
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{mean}\NormalTok{(meap01}\OperatorTok{$}\NormalTok{exppp)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5194.865
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{sd}\NormalTok{(meap01}\OperatorTok{$}\NormalTok{exppp)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1091.89
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(meap01}\OperatorTok{$}\NormalTok{exppp)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1207    4502    5078    5195    5767   11958
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data=}\NormalTok{meap01,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{meap01}\OperatorTok{$}\NormalTok{exppp))}\OperatorTok{+}\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{col=}\StringTok{'dark grey'}\NormalTok{,}\DataTypeTok{fill=}\StringTok{'white'}\NormalTok{)}\OperatorTok{+}\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Histogram: Expenditure per Pupil"}\NormalTok{)}\OperatorTok{+}\KeywordTok{xlab}\NormalTok{(}\StringTok{"Expenditure"}\NormalTok{)}\OperatorTok{+}\KeywordTok{ylab}\NormalTok{(}\StringTok{"Frequency"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+\end{verbatim}
+
+\includegraphics{woolridge_c1_files/figure-latex/unnamed-chunk-14-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#Considering Min=1207 and Max=11958, It is significantly wide}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{(vii) Suppose School A spends \$6,000 per student and School B
+spends \$5,500 per student. By what percentage does School A's spending
+exceed School B's? Compare this to 100 · {[}log(6,000) -- log(5,500){]},
+which is the approximation percentage difference based on the difference
+in the natural logs. (See Section A.4 in Appendix A.)}
+
+\emph{Solution}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{round}\NormalTok{((}\KeywordTok{log}\NormalTok{(}\DecValTok{6000}\NormalTok{)}\OperatorTok{-}\KeywordTok{log}\NormalTok{(}\DecValTok{5500}\NormalTok{))}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{) }\CommentTok{# Gives the Percentage}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 8.7
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{round}\NormalTok{(((}\DecValTok{6000-5500}\NormalTok{)}\OperatorTok{/}\StringTok{ }\DecValTok{5500}\NormalTok{)}\OperatorTok{*}\DecValTok{100}\NormalTok{,}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 9.09
+\end{verbatim}
 
 \end{document}

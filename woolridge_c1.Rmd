@@ -1,3 +1,9 @@
+---
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
 
 ## Introductory Econometrics: Chapter 1
 ## Author: J M Woolridge
@@ -101,5 +107,93 @@ avg_s
 hist(s$cigs, xlab='Pregnant Women Smokers')
 #It markedly differs from the privious average by about 11 units.
 ```
+
+**C3 The data in MEAP01 are for the state of Michigan in the year 2001. Use these data to answer the following questions.**
+```{r}
+head(meap01)
+```
+
+**(i) Find the largest and smallest values of math4. Does the range make sense? Explain. **
+
+*Solution*
+```{r}
+head(meap01)
+summary(meap01$math4) # It makes sense as percentage is between 0 and 100
+
+```
+
+**(ii) How many schools have a perfect pass rate on the math test? What percentage is this of the total sample? **
+
+*Solution*
+```{r}
+library(dplyr)
+passrate100=nrow(meap01 %>% group_by(math4) %>% filter(math4=='100'))
+passrate100
+samplesize=nrow(meap01)
+samplesize
+
+percent_passrate=round((passrate100/samplesize)*100,2)
+percent_passrate
+```
+
+
+**(iii) How many schools have math pass rates of exactly 50%? **
+
+*Solution*
+```{r}
+library(dplyr)
+
+nrow(meap01 %>% group_by(math4) %>% filter(math4=='50'))
+
+```
+
+
+**(iv) Compare the average pass rates for the math and reading scores. Which test is harder to pass? **
+
+*Solution*
+```{r}
+pass_m=mean(meap01$math4)
+pass_m
+
+pass_r=mean(meap01$read4)
+pass_r
+
+#Cleary Reading is much more difficult to pass
+
+```
+
+
+**(v) Find the correlation between math4 and read4. What do you conclude? **
+
+*Solution*
+```{r}
+cor(meap01$math4,meap01$read4)
+library(ggplot2)
+ggplot(data=meap01,aes(x=meap01$math4,y=meap01$read4))+geom_point(col='salmon')+ggtitle("Scatterplot: Maths vs Reading")+xlab("Math Score")+ylab("Reading Score")
+#It is strongly positive
+```
+
+
+**(vi) The variable exppp is expenditure per pupil. Find the average of exppp along with its standard deviation. Would you say there is wide variation in per pupil spending? **
+```{r}
+mean(meap01$exppp)
+sd(meap01$exppp)
+summary(meap01$exppp)
+library(ggplot2)
+ggplot(data=meap01,aes(x=meap01$exppp))+geom_histogram(col='dark grey',fill='white')+ggtitle("Histogram: Expenditure per Pupil")+xlab("Expenditure")+ylab("Frequency")
+#Considering Min=1207 and Max=11958, It is significantly wide
+```
+
+
+**(vii) Suppose School A spends $6,000 per student and School B spends $5,500 per student. By what percentage does School A’s spending exceed School B’s? Compare this to 100 · [log(6,000) – log(5,500)], which is the approximation percentage difference based on the difference in the natural logs. (See Section A.4 in Appendix A.)**
+
+*Solution*
+```{r}
+round((log(6000)-log(5500))*100,2) # Gives the Percentage
+round(((6000-5500)/ 5500)*100,2)
+
+```
+
+
 
 
