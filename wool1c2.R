@@ -27,6 +27,7 @@ avg_all=mean(bwght$cigs)
 avg_all
 
 library(dplyr)
+
 nrow(bwght %>% group_by(cigs) %>% filter(cigs=='0'))
 s=(bwght %>% group_by(cigs) %>% filter(cigs>'0'))
 avg_s=mean(s$cigs)

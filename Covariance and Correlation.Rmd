@@ -1,0 +1,8 @@
+## Covariance and Correlation
+
+
+# Definition
+
+### <b> 
+
+**C1: Use the data in WAGE1 for this exercise** 

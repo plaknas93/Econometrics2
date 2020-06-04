@@ -194,6 +194,238 @@ round(((6000-5500)/ 5500)*100,2)
 
 ```
 
+**C4: The data in JTRAIN2 come from a job training experiment conducted for low-income men during 1976–1977; see Lalonde (1986). **
+```{r}
+head(jtrain2)
+?jtrain2
+```
+
+**(i) Use the indicator variable train to determine the fraction of men receiving job training.**
+
+*Solution*
+```{r}
+tr=nrow(jtrain2 %>% group_by(train) %>% filter(train=='1'))
+tr
+total=nrow(jtrain2)
+total
+percent_trained=round((tr/total)*100,2)
+percent_trained
+```
+
+
+**(ii) The variable re78 is earnings from 1978, measured in thousands of 1982 dollars. Find the averages of re78 for the sample of men receiving job training and the sample not receiving job training. Is the difference economically large? **
+
+*Solution*
+```{r}
+train78=jtrain2 %>% select(re78,train) %>% group_by(re78) %>% filter(train=='1')
+train78
+mean(train78$re78)
+untrain78=jtrain2 %>% select(re78,train) %>% group_by(re78) %>% filter(train=='0')
+untrain78
+mean(untrain78$re78)
+
+library(sm)
+ab=c(train78$re78,untrain78$re78)
+hist(train78$re78)
+hist(untrain78$re78)
+g=rep(1:2, rep(100,2))
+sm.density.compare(ab,g, xlab="Earnings, 1978",model="equal") # plot densities
+
+#Mean for Trained worker is 6.35 and Untrained is 4.55. Significant Difference
+
+```
+
+**(iii) The variable unem78 is an indicator of whether a man is unemployed or not in 1978. What fraction of the men who received job training are unemployed? What about for men who did not receive job training? Comment on the difference. **
+
+*Solution*
+```{r}
+train_uemp=jtrain2 %>% select(unem78,train) %>% group_by(train) %>% filter(train=='1' & unem78=='1')
+tu=nrow(train_uemp)
+tu
+tot_train=nrow(jtrain2 %>% select(unem78,train) %>% group_by(train) %>% filter(train=='1'))
+tot_train
+
+round((tu/tot_train)*100,2) #Percentage Unemployed with Training
+
+untrain_unemp=jtrain2 %>% select(unem78,train) %>% group_by(train) %>% filter(train=='0' & unem78=='1')
+utue=nrow(untrain_unemp)
+utue
+tot_untrain=nrow(jtrain2 %>% select(unem78,train) %>% group_by(train) %>% filter(train=='0'))
+
+round((utue/tot_untrain)*100,2) #Percentage Unemployed without Training
+#Unemployment figure among untrained individuals is much larger than trained
+```
+
+
+**(iv) From parts (ii) and (iii), does it appear that the job training program was effective? What would make our conclusions more convincing?**
+ 
+*Solution*
+The differences in earnings and unemployment rates suggest the training program had
+strong, positive effects. Our conclusions about economic significance would be stronger if we
+could also establish statistical significance
+
+*End of C4*
+
+**C5 The data in FERTIL2 were collected on women living in the Republic of Botswana in 1988. The variable children refers to the number of living children. The variable electric is a binary indicator equal to one if the woman’s home has electricity, and zero if not. **
+
+```{r}
+head(fertil2)
+?fertil2
+```
+
+
+**(i) Find the smallest and largest values of children in the sample. What is the average of children? **
+
+*Solution*
+```{r}
+summary(fertil2$children)
+```
+
+**(ii) What percentage of women have electricity in the home? **
+
+*Solution*
+```{r}
+library(dplyr)
+tot_women=nrow(fertil2)
+tot_women
+elec_women=nrow(fertil2 %>% filter(electric=="1"))
+elec_women
+perc_with_elect=round((elec_women/tot_women)*100,2)
+perc_with_elect
+```
+
+
+**(iii) Compute the average of children for those without electricity and do the same for those with electricity. Comment on what you find. **
+
+*Solution*
+```{r}
+library(dplyr)
+elect_child=fertil2 %>% select(children,electric) %>% filter(electric==1)
+
+avg_chil_with_elec=mean(elect_child$children) 
+
+avg_chil_with_elec #Average Children in Electricy households
+
+
+non_elect_child=fertil2 %>% select(children,electric) %>% filter(electric==0)
+
+avg_chil_with_no_elec=mean(non_elect_child$children) 
+
+avg_chil_with_no_elec #Average Children in Non Electricy households
+
+#Clearly the electricity households have fewer children
+```
 
 
 
+(iv) From part (iii), can you infer that having electricity “causes” women to have fewer children? Explain.
+
+*Solution*
+Not directly byt may be influency of electricity devices like TV and radio are more likely to promote fewer children and more liberal thoughts.
+
+**C6 Use the data in COUNTYMURDERS to answer this question. Use only the year 1996. The variable murders is the number of murders reported in the county. The variable execs is the number of executions that took place of people sentenced to death in the given county. Most states in the United States have the death penalty, but several do not. **
+```{r}
+head(countymurders)
+?countymurders
+#This is a Panel dataset
+```
+
+
+**(i) How many counties are there in the data set? Of these, how many have zero murders? What percentage of counties have zero executions? (Remember, use only the 1996 data.) **
+
+*Solution*
+```{r}
+library(dplyr)
+county96=countymurders %>% select(countyid,year,murdrate,execs) %>% filter(year=="1996")
+nrow(county96)
+county96_0murd=countymurders %>% select(countyid,year,murdrate,execs) %>% filter(year=="1996" & murdrate=="0")
+nrow(county96_0murd) #Counties with Zero murders
+
+county96_0exec=countymurders %>% select(countyid,year,murdrate,execs) %>% filter(year=="1996" & execs=="0")
+nrow(county96_0exec) #Counties with Zero executions
+perc_county_0exe=round(nrow(county96_0exec)/nrow(county96),2)*100
+perc_county_0exe #Percentage of Counties with zero exexutions
+
+```
+
+
+**(ii) What is the largest number of murders? What is the largest number of executions? Why is the average number of executions so small? **
+
+*Solution*
+```{r}
+library(dplyr)
+county96 %>% filter(murdrate==max(county96$murdrate))
+max(county96$murdrate) #Maximum Murder rate
+max(county96$execs) #Maximum Executions
+mean(county96$execs) #The mean of execution is so small because many counties do not practice death penalty and many have no executions
+
+```
+
+**(iii) Compute the correlation coefficient between murders and execs and describe what you find.**
+
+*Solution*
+```{r}
+cor(county96$murdrate,county96$execs)
+library(ggplot2)
+ggplot(data=county96,aes(x=murdrate,y=execs))+geom_point(col='red')+ggtitle("Scatterplot: Murder rates vs Executions")+xlab("Murders")+ylab("Executions")
+```
+
+
+**(iv) You should have computed a positive correlation in part (iii). Do you think that more executions cause more murders to occur? What might explain the positive correlation?**
+
+*Solution*
+It is a very weak positive correlation. We would expect the two to have negative relationship. Here the data is influenced by the fact that many states have outlawed death penalty
+
+*End of C6*
+
+**C7 The data set in ALCOHOL contains information on a sample of men in the United States. Two key variables are self-reported employment status and alcohol abuse (along with many other variables). The variables employ and abuse are both binary, or indicator, variables: they take on only the values zero and one. **
+```{r}
+head(alcohol)
+?alcohol
+#Cross sectional data set
+```
+
+
+
+
+**(i) What is percentage of the men in the sample report abusing alcohol? What is the employment rate? **
+
+**Solution**
+```{r}
+ab=nrow(alcohol %>% filter(abuse=="1"))
+tot=nrow(alcohol)
+
+p_ab=(round((ab/tot)*100,2))
+p_ab #Percentage of men reporting alcohol abuse
+
+employed=nrow(alcohol %>% filter(status=="3"))
+employed
+employment_rate=(round((employed/tot)*100,2))
+employment_rate #Employment rate in the sample
+```
+
+**(ii) Consider the group of men who abuse alcohol. What is the employment rate? **
+
+**Solution**
+```{r}
+ab_tot=nrow(alcohol %>% filter(abuse=="1"))
+ab_tot
+ab_employed=nrow(alcohol %>% filter(abuse=='1' & status=="3"))
+ab_employed
+ab_employment_rate=(round((ab_employed/ab_tot)*100,2))
+ab_employment_rate #Employment rate among alcohol abuses in the sample
+```
+**(iii) What is the employment rate for the group of men who do not abuse alcohol? **
+```{r}
+no_ab_tot=nrow(alcohol %>% filter(abuse=="0"))
+no_ab_tot
+no_ab_employed=nrow(alcohol %>% filter(abuse=='0' & status=="3"))
+no_ab_employed
+no_ab_employment_rate=(round((no_ab_employed/no_ab_tot)*100,2))
+no_ab_employment_rate #Employment rate among alcohol abuses in the sample
+```
+
+(iv) Discuss the difference in your answers to parts (ii) and (iii). Does this allow you to conclude that alcohol abuse causes unemployment?
+
+*Solution*
+There is hardly a difference of around 3%. Not much significant to make any conclusion with reasonabale certainty.
