@@ -162,3 +162,4 @@ ggplot(d2)+geom_line(aes(x=d2$b,y=d2$b_sk),col='dark green',fill='')+xlab('data'
 
 ggplot(d2)+geom_line(aes(x=d2$a,y=d2$a_sk),col='red')+geom_line(aes(x=d2$b,y=d2$b_sk),col='dark green')+xlab('data')+ylab('3rd moment of data')+ggtitle("Comparing the two data sets with their 3rd Moment")
 
+#THE END
