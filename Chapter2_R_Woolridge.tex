@@ -1,0 +1,441 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdfborder={0 0 0},
+  breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-2}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+
+\#\textbf{Chapter 2: Simple Linear Regression}
+
+\#\#\emph{Author: J Wooldridge}
+
+\#\#\#\textbf{Regression Practice}
+
+\begin{verbatim}
+## 
+## Attaching package: 'dplyr'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+\end{verbatim}
+
+\#\textbf{Exapmple 2.3 CEO Salary and Return on Equity}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##     223     736    1039    1281    1407   14822
+\end{verbatim}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    0.50   12.40   15.50   17.18   20.00   56.30
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = salary ~ roe, data = ceosal1)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1160.2  -526.0  -254.0   138.8 13499.9 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)   963.19     213.24   4.517 1.05e-05 ***
+## roe            18.50      11.12   1.663   0.0978 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1367 on 207 degrees of freedom
+## Multiple R-squared:  0.01319,    Adjusted R-squared:  0.008421 
+## F-statistic: 2.767 on 1 and 207 DF,  p-value: 0.09777
+\end{verbatim}
+
+\begin{verbatim}
+## `geom_smooth()` using formula 'y ~ x'
+\end{verbatim}
+
+\includegraphics{Chapter2_R_Woolridge_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+\textbf{Interpretation: }\\
+If the ROE of the the firm increases by 1 percentage point than the
+CEO's salary increasese by \textbf{18.5} thousand dollars.
+
+\#\textbf{Exapmple 2.4 Wage and Education}
+
+Consider the scatterplot of wage vs education from the wage dataset and
+the OLS model estimates
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = wage ~ educ, data = wage1)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5.3396 -2.1501 -0.9674  1.1921 16.6085 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -0.90485    0.68497  -1.321    0.187    
+## educ         0.54136    0.05325  10.167   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 3.378 on 524 degrees of freedom
+## Multiple R-squared:  0.1648, Adjusted R-squared:  0.1632 
+## F-statistic: 103.4 on 1 and 524 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = wage ~ educ, data = wage1)
+## 
+## Coefficients:
+## (Intercept)         educ  
+##     -0.9049       0.5414
+\end{verbatim}
+
+\begin{verbatim}
+## `geom_smooth()` using formula 'y ~ x'
+\end{verbatim}
+
+\includegraphics{Chapter2_R_Woolridge_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\textbf{Interpretation: } 1 more year of education increases wage by a
+half a dollar per hour. {NOTE}: The {intercept} value of {-.54} implies
+negative hourly wage for no education. This is absurd. A person who has
+no education will not be paying his employer for doing work.
+
+\#\textbf{Exapmple 2.5 Voting Outcomes and Campaign Expenditures}
+
+Consider the scatterplot of wage vs education from the wage dataset and
+the OLS model estimates
+
+\begin{verbatim}
+##   state district democA voteA expendA expendB prtystrA lexpendA lexpendB
+## 1    AL        7      1    68 328.296   8.737       41 5.793916 2.167567
+## 2    AK        1      0    62 626.377 402.477       60 6.439952 5.997638
+## 3    AZ        2      1    73  99.607   3.065       55 4.601233 1.120048
+## 4    AZ        3      0    69 319.690  26.281       64 5.767352 3.268846
+## 5    AR        3      0    75 159.221  60.054       66 5.070293 4.095244
+## 6    AR        4      1    69 570.155  21.393       46 6.345908 3.063064
+##     shareA
+## 1 97.40767
+## 2 60.88104
+## 3 97.01476
+## 4 92.40370
+## 5 72.61247
+## 6 96.38355
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = voteA ~ shareA, data = vote1)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -16.8919  -4.0660  -0.1682   3.4965  29.9772 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 26.81221    0.88721   30.22   <2e-16 ***
+## shareA       0.46383    0.01454   31.90   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 6.385 on 171 degrees of freedom
+## Multiple R-squared:  0.8561, Adjusted R-squared:  0.8553 
+## F-statistic:  1018 on 1 and 171 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = voteA ~ shareA, data = vote1)
+## 
+## Coefficients:
+## (Intercept)       shareA  
+##     26.8122       0.4638
+\end{verbatim}
+
+\begin{verbatim}
+## `geom_smooth()` using formula 'y ~ x'
+\end{verbatim}
+
+\includegraphics{Chapter2_R_Woolridge_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+\textbf{Interpretation: } Vote share increases by almost half a percent
+if Cadidate A increases his campaign spending by 1 percent in the total
+campaign spending among both.
+
+\#\textbf{Example 2.6 CEO Salary and ROE}
+
+\begin{verbatim}
+## [1] 1281.119
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 1281.12
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = salary ~ roe, data = ceosal1)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1160.2  -526.0  -254.0   138.8 13499.9 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)   963.19     213.24   4.517 1.05e-05 ***
+## roe            18.50      11.12   1.663   0.0978 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1367 on 207 degrees of freedom
+## Multiple R-squared:  0.01319,    Adjusted R-squared:  0.008421 
+## F-statistic: 2.767 on 1 and 207 DF,  p-value: 0.09777
+\end{verbatim}
+
+\begin{verbatim}
+## [1] 0.0121
+\end{verbatim}
+
+\includegraphics{Chapter2_R_Woolridge_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\#\textbf{Example 2.7 Wage and Education}\\
+No Analysis required
+
+\#\textbf{Example 2.8 CEO Salary and ROE}\\
+The correlation between predicted salary and observed salary is
+\textbf{0.11}. This when squared yields \textbf{0.01}.
+
+The results of regression of salary on roe are:
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = salary ~ roe, data = ceosal1)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1160.2  -526.0  -254.0   138.8 13499.9 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)   963.19     213.24   4.517 1.05e-05 ***
+## roe            18.50      11.12   1.663   0.0978 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1367 on 207 degrees of freedom
+## Multiple R-squared:  0.01319,    Adjusted R-squared:  0.008421 
+## F-statistic: 2.767 on 1 and 207 DF,  p-value: 0.09777
+\end{verbatim}
+
+This explains the plot \texttt{\{r,echo=FALSE\}\ sal\_roe\_plot}
+
+\#\textbf{Example 2.9 Voting Outcomes and Campaign Expenditures}\\
+The regresssion outcome as indicated by the plot, cleary, seems to be a
+better fit for the model. { But, How much better?}
+
+\begin{verbatim}
+## `geom_smooth()` using formula 'y ~ x'
+\end{verbatim}
+
+\includegraphics{Chapter2_R_Woolridge_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+We check the R-Square also called the, Coefficient of Determination. In
+this case the R square value is \textbf{0.8561409}.
+
+\#\textbf{2-4 Units of Measurement and Functional Form (Page 36)}\\
+(1)Change in DEPENDENT VARIABLE UNIT\\
+Consider the case of CEO\_Sal regressed on ROE. Here, CEO\_Sal is
+interms of thousands of \$ and ROE is measured as percentage. If
+CEO\_Sal is instead changed to 100s, what would the impact on beta and
+alpha?
+
+The new regression result is as follows:
+
+\begin{verbatim}
+##   salary pcsalary   sales  roe pcroe ros indus finance consprod utility
+## 1   1095       20 27595.0 14.1 106.4 191     1       0        0       0
+## 2   1001       32  9958.0 10.9 -30.6  13     1       0        0       0
+## 3   1122        9  6125.9 23.5 -16.3  14     1       0        0       0
+## 4    578       -9 16246.0  5.9 -25.7 -21     1       0        0       0
+## 5   1368        7 21783.2 13.8  -3.0  56     1       0        0       0
+## 6   1145        5  6021.4 20.0   1.0  55     1       0        0       0
+##    lsalary    lsales
+## 1 6.998509 10.225389
+## 2 6.908755  9.206132
+## 3 7.022868  8.720281
+## 4 6.359574  9.695602
+## 5 7.221105  9.988894
+## 6 7.043160  8.703075
+\end{verbatim}
+
+\begin{verbatim}
+##   salary  roe sal_100
+## 1   1095 14.1   10950
+## 2   1001 10.9   10010
+## 3   1122 23.5   11220
+## 4    578  5.9    5780
+## 5   1368 13.8   13680
+## 6   1145 20.0   11450
+\end{verbatim}
+
+\begin{verbatim}
+## (Intercept)         roe 
+##   9631.9134    185.0119
+\end{verbatim}
+
+The old regression (CEO\_sal on ROE) result was
+
+\begin{verbatim}
+## (Intercept)         roe 
+##   963.19134    18.50119
+\end{verbatim}
+
+Notice, both intercept and slope get multiplied by \textbf{10}.\\
+\textbf{In General, for every multiplication or division by any constant
+`c' to the DEPENDENT variable must be repeated across all intercept and
+independent variable.}
+
+(2)Change in INDEPENDENT VARIABLE UNIT\\
+Consider the case of CEO\_Sal regressed on ROE. Here, CEO\_Sal is
+interms of thousands of \$ and ROE is measured as percentage. If ROE is
+instead changed to its decimal form, what would the impact on beta and
+alpha?
+
+The new regression result is as follows:
+
+\begin{verbatim}
+##   salary pcsalary   sales  roe pcroe ros indus finance consprod utility
+## 1   1095       20 27595.0 14.1 106.4 191     1       0        0       0
+## 2   1001       32  9958.0 10.9 -30.6  13     1       0        0       0
+## 3   1122        9  6125.9 23.5 -16.3  14     1       0        0       0
+## 4    578       -9 16246.0  5.9 -25.7 -21     1       0        0       0
+## 5   1368        7 21783.2 13.8  -3.0  56     1       0        0       0
+## 6   1145        5  6021.4 20.0   1.0  55     1       0        0       0
+##    lsalary    lsales
+## 1 6.998509 10.225389
+## 2 6.908755  9.206132
+## 3 7.022868  8.720281
+## 4 6.359574  9.695602
+## 5 7.221105  9.988894
+## 6 7.043160  8.703075
+\end{verbatim}
+
+\begin{verbatim}
+##   salary  roe roe_dec
+## 1   1095 14.1   0.141
+## 2   1001 10.9   0.109
+## 3   1122 23.5   0.235
+## 4    578  5.9   0.059
+## 5   1368 13.8   0.138
+## 6   1145 20.0   0.200
+\end{verbatim}
+
+\begin{verbatim}
+## (Intercept)     roe_dec 
+##    963.1913   1850.1186
+\end{verbatim}
+
+The old regression (CEO\_sal on ROE) result was
+
+\begin{verbatim}
+## (Intercept)         roe 
+##   963.19134    18.50119
+\end{verbatim}
+
+Notice, only beta changes and alpha remains unchanged. ROE is multiplied
+by 100 for a division of 100 of the independent's units.
+
+\textbf{In General, every multiplication or division by any constant `c'
+to the INDEPENDENT variable must be repeated with division or
+multiplication resp of across DEPENDENT ONLY.}
+
+\end{document}

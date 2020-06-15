@@ -1,0 +1,155 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+#**Chapter 2: Simple Linear Regression**
+
+##*Author: J Wooldridge*
+
+
+###**Regression Practice**
+
+```{r,echo=FALSE}
+library(wooldridge)
+library(dplyr)
+library(ggplot2)
+library(rsq) #For R sq
+```
+
+#**Exapmple 2.3 CEO Salary and Return on Equity**
+```{r, echo=FALSE}
+summary(ceosal1$salary)
+summary(ceosal1$roe)
+
+fit1=lm(salary~roe,ceosal1)
+summary(fit1)
+
+sal_roe_plot=ggplot(ceosal1,aes(x=roe,y=salary))+geom_smooth(method='lm',se=FALSE,col='dark green')+geom_point(col='green')+ggtitle("Scatterplot: CEO Salary vs ROE")+annotate("text", x=55, y=14500, label = "R^2 == 0.01", parse=T)+annotate("text", x=55, y=13000, label = "hat(alpha) == 963.2", parse=T)+annotate("text", x=55, y=11500, label = "hat(beta) == 18.5", parse=T)+theme_bw()
+sal_roe_plot
+```
+  
+**Interpretation: **  
+If the ROE of the the firm increases by 1 percentage point than the CEO's salary increasese by **`r (round(fit1$coefficients[2],2))`** thousand dollars.
+  
+#**Exapmple 2.4 Wage and Education**
+  
+Consider the scatterplot of wage vs education from the wage dataset and the OLS model estimates
+```{r,echo=FALSE}
+#OLS
+fit=lm(wage~educ,wage1)
+summary(fit)
+fit
+#Scatterplot+Regression line
+wage_edu_plot=ggplot(wage1,aes(x=educ,y=wage))+geom_point(col='cornflower blue')+ggtitle("Scatterplot: Wage vs Education")+geom_smooth(method='lm',se=FALSE,col='red')+annotate("text", x=2, y=24, label = "R^2 == 0.16", parse=T)+annotate("text", x=2, y=22, label = "hat(alpha) == -0.90", parse=T)+annotate("text", x=2, y=20, label = "hat(beta) == 0.54", parse=T)+theme_bw()
+wage_edu_plot
+```
+  
+**Interpretation: **
+1 more year of education  increases wage by a half a dollar per hour. <span style="color: red;">NOTE</span>: The <span style="color: red;">intercept</span> value of <span style="color: red;">-.54</span> implies negative hourly wage for no education. This is absurd. A person who has no education will not be paying his employer for doing work.
+
+#**Exapmple 2.5 Voting Outcomes and Campaign Expenditures**
+  
+Consider the scatterplot of wage vs education from the wage dataset and the OLS model estimates
+```{r,echo=FALSE}
+#OLS
+head(vote1)
+fit2=lm(voteA~shareA,vote1)
+summary(fit2)
+fit2
+#Scatterplot+Regression line
+vote_share_plot=ggplot(vote1,aes(x=shareA,y=voteA))+geom_point(col='salmon')+ggtitle("Scatterplot: Voting Outcomes vs Campaign Expenditure")+geom_smooth(method='lm',se=FALSE,col='red')+annotate("text", x=95, y=40, label = "R^2 == 0.85", parse=T)+annotate("text", x=95, y=35, label = "hat(alpha) == 26.81", parse=T)+annotate("text", x=95, y=30, label = "hat(beta) == 0.46", parse=T)+theme_bw()
+vote_share_plot
+```
+    
+**Interpretation: **
+Vote share increases by almost half a percent if Cadidate A increases his campaign spending by 1 percent in the total campaign spending among both. 
+
+
+#**Example 2.6 CEO Salary and ROE**
+```{r,echo=FALSE}
+#OLS
+
+data=ceosal1
+
+data2= data %>% select(roe,salary)%>%mutate(pred_salary=round(fitted.values(fit1),2),residual=round(fit1$residuals,2))
+
+
+
+cov_r_roe=cov(data2$roe,data2$residual)
+m_pred=mean(data2$pred_salary)
+m_pred
+m_sal=mean(data2$salary)
+m_sal
+
+summary(fit1)
+cor_pred_sal_act_sal=round(cor(data2$pred_salary,data2$salary),2)
+cor_pred_sal_act_sal^2
+
+ggplot(data2,aes(residual))+geom_histogram(binwidth=250,fill='cornflower blue',col='black')+ggtitle("Histogram of residuals")+xlab('residuals')+theme_bw()+annotate("text",x=11000,y=46,label="Covariance(residual,roe)== 0",parse=T)+annotate("text",x=11000,y=41,label="Mean_Actaul_Salary==1281.12",parse=T)+annotate("text",x=11000,y=36,label="Mean_Fitted_Salary== 1281.12",parse=T)
+
+```
+  
+#**Example 2.7 Wage and Education**   
+No Analysis required
+  
+#**Example 2.8 CEO Salary and ROE**  
+The correlation between predicted salary and observed salary is **`r cor_pred_sal_act_sal`**. This when squared yields **`r round(cor_pred_sal_act_sal^2,2)`**.
+  
+The results of regression of salary on roe are:  
+```{r,echo=FALSE} 
+summary(fit1)
+```
+  
+This explains the plot
+```{r,echo=FALSE} sal_roe_plot```
+  
+#**Example 2.9 Voting Outcomes and Campaign Expenditures**   
+The regresssion outcome as indicated by the plot, cleary, seems to be a better fit for the model.
+<span style='color:red;'> But, How much better?</span>
+```{r,echo=FALSE}
+vote_share_plot
+```
+  
+We check the R-Square also called the, Coefficient of Determination. In this case the R square value is **`r  rsq(fit2)`**.
+  
+#**2-4 Units of Measurement and Functional Form (Page 36)**  
+(1)Change in DEPENDENT VARIABLE UNIT  
+Consider the case of CEO_Sal regressed on ROE. Here, CEO_Sal is interms of thousands of $ and ROE is measured as percentage. If CEO_Sal is instead changed to 100s, what would the impact on beta and alpha?
+
+The new regression result is as follows:
+```{r, echo=FALSE}
+head(ceosal1)
+data3= ceosal1 %>% select(salary,roe) %>% mutate(sal_100=salary*10) #Salary in 100 dollars
+head(data3)
+
+fit3=lm(sal_100~roe,data3)
+fit3$coefficients
+```
+The old regression (CEO_sal on ROE) result was
+```{r,echo=FALSE}
+fit1$coefficients
+```
+Notice, both intercept and slope get multiplied by **10**.  
+**In General, for every multiplication or division by any constant 'c' to the DEPENDENT variable must be repeated across all intercept and independent variable.**
+
+(2)Change in INDEPENDENT VARIABLE UNIT  
+Consider the case of CEO_Sal regressed on ROE. Here, CEO_Sal is interms of thousands of $ and ROE is measured as percentage. If ROE is instead changed to its decimal form, what would the impact on beta and alpha?
+
+The new regression result is as follows:
+```{r, echo=FALSE}
+head(ceosal1)
+data4= ceosal1 %>% select(salary,roe) %>% mutate(roe_dec=roe/100) #roe in decimal
+head(data4)
+
+fit4=lm(salary~roe_dec,data4)
+fit4$coefficients
+```
+The old regression (CEO_sal on ROE) result was
+```{r,echo=FALSE}
+fit1$coefficients
+```
+Notice, only beta changes and alpha remains unchanged. ROE is multiplied by 100 for a division of 100 of the independent's units. 
+
+**In General, every multiplication or division by any constant 'c' to the INDEPENDENT variable must be repeated with division or multiplication resp of across DEPENDENT ONLY.**
+
