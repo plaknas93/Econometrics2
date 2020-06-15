@@ -1,32 +1,100 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
 
-#Problem Set 1: Answers and Analysis using R
-##R edit by RJ Neel
-##Original Author: Ben Lambert
+#Problem Set 1: Solutions and Analysis using R    
+##R edit by RJ Neel  
+##Original Author: Ben Lambert  
 
-###Getting started with R
+###Getting started with R  
 R is a free programming language used for statistical analysis (and much more). Other softwares used for statistical analysis are Gretl, IBM SPSS, MATLAB, Python and many more. Python is the leading data analysis language. R is popular among academics.
 
 The following link covers all the necessary information regarding R and R studio installation
 Link:https://www.youtube.com/watch?v=9-RrkJQQYqY
 
-###The Crime-Unemployment data set
+###The Crime-Unemployment data set  
 
-Let's begin by 
-```{r}
+**#Questions 1 to 2: Histograms**  
+Let's begin by Visualizing the data.We do this by plotting Histograms.  
+```{r,echo=FALSE}
 #Crime Unemployment data analysis
-
 #Read
 data=read.csv(file="D:/RWorks/Econometrics2/Datasets/problemset1.csv")
-head(data)
+head(data) #Describes Unemplyment rate and violence per 100,000 
 
 # Visualize
 library(ggplot2)
 
-#Scatterplot
-ggplot(data=data,aes(x=data$Unemployment,y=data$Violence,col=data$State))+geom_point()+xlab('Unemployment')+ylab('Violence')+ggtitle("Scatterplot: Unemployment vs Violence, States, 2010")
+#Using ggplot
+ggplot(data,aes(x=Violence))+geom_histogram(fill='salmon',col='red',bins=19)+ggtitle("Histogram of Violence per 100,000 by States (2010)")+xlab('Violence rate')+ylab('Frequency')
+ggplot(data,aes(x=Unemployment))+geom_histogram(fill='light green',col='dark green',bins=19)+ggtitle("Histogram of Unemployment rate by states (2010)")+xlab('Unemployment rate')+ylab('Frequency')
+```
+  
+**#Questions 3: Maximum Violence state**  
+The State with Maximum violence is  
+```{r,echo=FALSE}
+library(dplyr)
+data[data$Violence==max(data$Violence),]
+```
+District of Columbia  
+  
+**#Questions 4: Summary of Data**  
+Summary Statistics  
+```{r}
+summary(data)
+```
 
-ggplot(data=data,aes(x=data$Unemployment,y=data$Violence)),labels=rownames(data$State))+geom_point()+xlab('Unemployment')+ylab('Violence')+ggtitle("Scatterplot: Unemployment vs Violence, States, 2010")+geom_text()
+    
+**#Questions 5: Relationship between Violence and Unemployment**  
+Let us try to check this using scatterplot  
+```{r,echo=FALSE}
+##Scatterplot
+ggplot(data=data,aes(x=Unemployment,y=Violence))+geom_point()+xlab('Unemployment')+ylab('Violence')+ggtitle("Scatterplot: Unemployment vs Violence, 2010")
 
+ggplot(data=data,aes(x=Unemployment,y=Violence,col=State))+geom_point()+xlab('Unemployment')+ylab('Violence')+ggtitle("Scatterplot: Unemployment vs Violence, States, 2010")
+
+#ggplot(data=data,aes(x=data$Unemployment,y=data$Violence,labels=rownames(data$State)))+geom_point()+xlab('Unemployment')+ylab('Violence')+ggtitle("Scatterplot: Unemployment vs Violence, States, 2010")+geom_text()
+
+```
+  
+*It appears to have a **positive** relation*  
+
+**#Questions 6: Correlation**  
+The Correlation between Violence and unemployment is `r round(cor(data$Unemployment,data$Violence),2)`  
+  
+**#Questions 7 to 8: Regression**  
+```{r,echo=FALSE}
+fit=lm(data$Violence~data$Unemployment)
+summary(fit)
+fit$coefficients
+
+ggplot(data=data,aes(x=Unemployment,y=Violence))+geom_point(col='red')+xlab('Unemployment')+ylab('Violence')+ggtitle("Scatterplot: Unemployment vs Violence, 2010")+geom_smooth(method='lm',col='red')
+
+```
+
+**#Questions 9: Interpretation of Beta**  
+For every 1 percentage change in unemployment we can expect an increase of 53 crimes per 100,000.    
+**#Questions 10: Regression of Unemployment (Dependent) on Violence (Independent) **  
+```{r,echo=FALSE}
+fit2=lm(data$Unemployment~data$Violence)
+summary(fit2)
+fit2$coefficients
+ggplot(data=data,aes(x=Violence,y=Unemployment))+geom_point(col='green')+ylab('Unemployment')+xlab('Violence')+ggtitle("Scatterplot: Violence vs Unemployment, 2010")+geom_smooth(method='lm',se=FALSE,col='red')
+
+```
+  
+**#Questions 11: Interpretation of Beta**  
+For every 1 unit increase in violence per 100,00 we can expect an increase of 0.003 percentage unit in Unemployment.   
+  
+**#Questions 11: Interpretation of Beta**  
+Regression does not indicate causality but on average we can expect higher unemployment to be associated with high violence. 
+Also, Higher violence may itself lead to unemployment.  
+  
+#Other Analysis
+```{r,echo=FALSE}
 #Boxplot
 ggplot(data=data,aes(x=data$Unemployment,y=data$Violence))+xlab('Unemployment')+ylab('Violence')+ggtitle("Boxplot: Unemployment vs Violence, States, 2010")+geom_boxplot(outlier.colour="red", outlier.shape=25,outlier.size=6, notch=FALSE)
 
@@ -42,10 +110,4 @@ polygon(density(data$Unemployment), col="pink")
 plot(density(data$Violence), main="Density Plot: Violence", ylab="Frequency", sub=paste("Skewness:", round(e1071::skewness(data$Violence), 2)))  # density plot for 'Violence'
 polygon(density(data$Violence), col="light green")
 
-#Histogram
-hist(data$Unemployment,col='pink',main = "Histogram of Unemployment",xlab='Unemployment by States')
-hist(data$Violence,col='light green',main = "Histogram of Violence",xlab = 'Violence by States')
-
-
-# Simple Quantification
-cor(data$Unemployment,data$Violence)
+```    
