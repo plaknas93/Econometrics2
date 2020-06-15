@@ -151,5 +151,5 @@ fit1$coefficients
 ```
 Notice, only beta changes and alpha remains unchanged. ROE is multiplied by 100 for a division of 100 of the independent's units. 
 
-**In General, every multiplication or division by any constant 'c' to the INDEPENDENT variable must be repeated with division or multiplication resp of across DEPENDENT ONLY.**
+**In General, every multiplication or division by any constant 'c' to the INDEPENDENT variable must be repeated with division or multiplication resp of across DEPENDENT ONLY.nexr**
 
