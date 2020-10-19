@@ -1,7 +1,7 @@
 
 #NORMALITY TESTS IN ECONOMETRICS USING R  
 ##Author: R J Neel  
-###Referene: Ben Lambert Econometrics Course, Introductory Econometrics: A modern approach by J Wooldrige, Econometric Analysis by W. Greeene
+###Referene: Ben Lambert Econometrics Course, Introductory Econometrics: A modern approach by J Wooldrige, Econometric Analysis by W. Greene
     
 Let us consider an example from the **wage1** dataset. Here, we test the relationship between wage and education and experience.
 ```{r,echo=FALSE,message=FALSE}
@@ -30,7 +30,7 @@ Therefore, we devise the following model:
 $Wage=\beta_0 + \beta_1*Education +\beta_2*Experience$
   
 The result of regression is   
-```{r,echo=FALSE, message=FALSE}
+```{r,echo=FALSE, messages=FALSE}
 fit=lm(wage~educ+exper,data)
 fit
 summary(fit)
@@ -44,7 +44,7 @@ Thus, we have $Wage=`r a`+`r b1`*Education +`r b2`*Experience$
   
 Now, we test for **NORMALITY**  
 
-Let us see the distribution of wages
+Let us see the distribution of wages  
 ```{r,echo=FALSE, message=FALSE}
 ggplot(data, aes(x=wage))+geom_histogram(col="red",fill='orange')+ggtitle("Distribution of Wage")+xlab("Wage")+ylab("Frequency")
 ```
@@ -52,9 +52,9 @@ ggplot(data, aes(x=wage))+geom_histogram(col="red",fill='orange')+ggtitle("Distr
 Prima facie it looks like the distribution is **skewed** towards the right.
   
 Let us conduct all the normality tests  
-
-**[1]Visual Tests**
-```{r,echo=FALSE, message=FALSE}
+  
+**[1]Visual Tests**  
+```{r,echo=FALSE, messages=FALSE}
 library(ggpubr)
 # Density plot
 p3=ggdensity(data$wage, fill = "orange")+ggtitle('Density plot for Wages')
@@ -62,8 +62,30 @@ p3=ggdensity(data$wage, fill = "orange")+ggtitle('Density plot for Wages')
 p4=ggqqplot(data$wage,col='orange')+ggtitle('QQ plot for Wages')
 grid.arrange(p3,p4,ncol=2)
 ```  
+    
+**[2]Jarque-Berra Test**  
+```{r,echo=FALSE, messages=FALSE}
+library(tseries)
+library(normtest)
+jarque.bera.test(data$wage)
+```  
   
+**INTERPRETATION**  
+For Jarque-Berra test our     
+*Ho: Distribution is NORMAL*  
+*Ha: Otherwise*  
+A p value of $<0.05$ implies That the test stastic lies in the <span style="color: red;">REJECTION REGION</span>. Therefore, We **fail** to conclude that the distribution is **NORMAL**. It was already hinted in the Visual tests.  
+    
+**[3]Shapiro-Wilk Test**  
+```{r,echo=FALSE, messages=FALSE}
+shapiro.test(data$wage)
+```  
+  
+As is in the case for Jarque-Berra test, In Shapiro-Wilkins test too = our       
+*Ho: Distribution is NORMAL*  
+*Ha: Otherwise*  
+A p value of $<0.05$ implies That the test stastic lies in the <span style="color: red;">REJECTION REGION</span>. Therefore, We **fail** to conclude that the distribution is **NORMAL**. It was already hinted in the Visual tests.  
 
-
+Shapiro-wilk is the more preferred test.  
 
 
