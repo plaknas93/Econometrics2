@@ -57,9 +57,9 @@ Let us conduct all the normality tests
 ```{r,echo=FALSE, messages=FALSE}
 library(ggpubr)
 # Density plot
-p3=ggdensity(data$wage, fill = "orange")+ggtitle('Density plot for Wages')
+p3=ggdensity(data$wage, fill = "orange")+ggtitle('Density plot for wages')
 # QQ plot
-p4=ggqqplot(data$wage,col='orange')+ggtitle('QQ plot for Wages')
+p4=ggqqplot(data$wage,col='orange')+ggtitle('QQ plot for wages') 
 grid.arrange(p3,p4,ncol=2)
 ```  
     
