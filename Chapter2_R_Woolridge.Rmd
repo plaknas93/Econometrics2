@@ -12,9 +12,13 @@ output:
 
 ```{r,echo=FALSE}
 library(wooldridge)
+library(plyr)
 library(dplyr)
 library(ggplot2)
 library(rsq) #For R sq
+library(kableExtra) #For Table Graphics
+library(broom)
+library(cowplot)
 ```
 
 #**Exapmple 2.3 CEO Salary and Return on Equity**
@@ -113,7 +117,8 @@ vote_share_plot
   
 We check the R-Square also called the, Coefficient of Determination. In this case the R square value is **`r  rsq(fit2)`**.
   
-#**2-4 Units of Measurement and Functional Form (Page 36)**  
+#**2-4 Units of Measurement and Functional Form (Page 36)**    
+##**(a) CHANGING UNITS OF MEASUREMENT**    
 (1)Change in DEPENDENT VARIABLE UNIT  
 Consider the case of CEO_Sal regressed on ROE. Here, CEO_Sal is interms of thousands of $ and ROE is measured as percentage. If CEO_Sal is instead changed to 100s, what would the impact on beta and alpha?
 
@@ -151,5 +156,178 @@ fit1$coefficients
 ```
 Notice, only beta changes and alpha remains unchanged. ROE is multiplied by 100 for a division of 100 of the independent's units. 
 
-**In General, every multiplication or division by any constant 'c' to the INDEPENDENT variable must be repeated with division or multiplication resp of across DEPENDENT ONLY.nexr**
+**In General, every multiplication or division by any constant 'c' to the INDEPENDENT variable must be repeated with division or multiplication resp of across DEPENDENT ONLY**
+
+##**(a) INCORPORATING NON LINEARITIES IN SR**  
+(1)Level-Level model    
+$y= \alpha + \beta x$ 
+$\Delta x$ of 1 unit results in a $\beta$ units change in $x$.
+
+(2)Log-Level model  
+$y= \exp^{\alpha+\beta x}$  
+In log form this would be written as
+$\log (y)= \alpha+\beta x$
+  
+     
+#**Example 2.10 A Log Wage Equation**  
+For the log form of wage1 dataset,  
+```{r, echo=FALSE}
+fit5=lm(log(wage)~educ,wage1)
+summary(fit5)
+kable(tidy(fit5),digits = 3) %>% kable_styling(bootstrap_options = "striped", full_width = F)
+```
+Thus,  
+**$\hat{\log (wage)}=0.584+.083 educ$**   
+**$R^2=`r round(rsq(fit5),2)`$**    
+**$n=`r nrow(wage1)`$**
+  
+**INTERPRETATION**  
+The coefficient on educ has a percentage interpretation when it is multiplied by $100$: $\hat{wage}$ increases by $8.3\%$ for every additional year of education. This is what economists mean when they refer to the *“return to another year of education.”* (Page 38). 
+  
+For sake of completion let us compare the two regression outputs of by comparing the fitted values in each case.
+```{r, echo=F}
+d1=data.frame(educ=wage1$educ,pred_wage=round(fitted(fit),2))
+plot_d1=ggplot(d1,aes(x=educ,y=pred_wage))+geom_line(color="salmon")+ggtitle("Regression of wage($) on educ(yrs)")+annotate("text", x=7.5, y=7.5, label = "hat(wage) == -0.09+0.54*educ", parse=T)+annotate("text", x=7.5, y=6.5, label = "R^2 == 0.164", parse=T)+theme_bw()
+
+d2=data.frame(educ=wage1$educ,pred_wage=exp(0.584+0.083*wage1$educ))
+plot_d2=ggplot(d2,aes(x=educ,y=pred_wage))+geom_line(color='salmon')+ggtitle("Regression of Log(wage) on educ(yrs)")+annotate("text", x=9, y=6, label = "wage == e^(0.58+0.083*educ)", parse=T)+annotate("text", x=8.2, y=5.5, label = "R^2 == 0.185", parse=T)+theme_bw()
+
+plot_grid(plot_d1,plot_d2)
+```
+  
+
+(2)Log-log model  
+$\log (y)= \alpha+\beta \log(x)$
+  
+#**Example 2.11 CEO and Firm Sales**
+
+```{r, echo=FALSE}
+fit6=lm(log(salary)~log(sales),ceosal1)
+summary(fit6)
+kable(tidy(fit6),digits = 3) %>% kable_styling(bootstrap_options = "striped", full_width = F)
+```
+Thus,  
+**$\hat{\log (salary)}=4.822+.257 log(sales)$**   
+**$R^2=`r round(rsq(fit6),2)`$**    
+**$n=`r nrow(ceosal1)`$**
+  
+**INTERPRETATION**  
+The coefficient of $log(sales)$ is the estimated elasticity of salary with respect to sales. It implies that a $1\%$ increase in firm sales increases CEO salary by about $0.257\%$ -the usual interpretation of an elasticity. (Page 39). 
+
+**#2-5 Expected values and variance of the OLS Estimators
+
+# Assumption: Zero Conditionality of Mean and Heteroskedasticity  
+Let us consider the education vs wage. As education level increases wage is likely to go up. Thus, we take sample for the following education levels:
+```{r,echo=F}
+ed= 1:25
+```
+  
+The wage levels are taken over 1000 samples. The first of these samples looks like 
+```{r,echo=FALSE}
+library(dplyr)
+w1=round((rnorm(100,mean=.5,sd=2))^2,2) #Lower wage
+w2= round((rnorm(100,mean=2.5,sd=1))^2,2) #Mid wage
+w3= round((rnorm(100,mean=5,sd=.5))^2,2) #High wage
+
+w=0
+all_samples=0
+m=0
+my_sample_mean=0
+my_sample_sd=0
+for(i in 1:1000)
+{
+  w[1:10]=sample(w1,10)
+  w[11:20]=sample(w2,10)
+  w[21:25]=sample(w2,5)
+  my_sample_mean[i]= mean(w) %>% round(2)
+  my_sample_sd[i]=sd(w) %>% round(2)
+  d=data.frame(ed,w)
+  all_samples[i]=list(d)
+}
+#all_samples[1]
+d1=ldply(all_samples[1], data.frame)
+d1
+
+```
+  
+This sample has a mean wage of **`r round(mean(d1$w),2)`** and std deviation of **`r sd(d1$w)%>% round(2)`**. 
+  
+The scatterplot looks like  
+```{r,echo=FALSE}
+ggplot(d1,aes(x=ed,y=w))+geom_point(col='red',size=2)+ggtitle("Wage ($ per hour) vs Education (yrs)")+xlab("education")+ylab("wage")+theme_bw()
+```
+    
+Next we turn to the sample distribution of wage over the same education levels
+```{r,echo=FALSE}
+dd=ldply(all_samples, data.frame) #The population
+
+s=data.frame(sample_no=1:1000,my_sample_mean,my_sample_sd)
+
+ggplot(data=s,aes(x=my_sample_mean,y=..density..))+geom_density(col='red')+theme_bw()+ggtitle("Distribution of Sample Means (Sampling Distribution)")+xlab("Sample Means")
+
+```
+  
+The mean of this sampling distibution is **`r mean(s$my_sample_mean) %>% round(2)`** and std deviation is **`r sd(s$my_sample_mean) %>% round(2)`**. 
+
+**#COMPARISON ACROSS SAMPLE, SAMPLING DISTRIBUTION & POPULATION**
+
+```{r,echo=FALSE}
+p=c("Sample","Sampling distrbution","Population")
+q=c(round(mean(d1$w),2),mean(s$my_sample_mean)%>% round(2),mean(dd$w)%>% round(2))
+r=c(round(sd(d1$w),2),sd(s$my_sample_mean)%>% round(2),sd(dd$w)%>% round(2))
+z=data.frame(p,q,r)
+colnames(z)=c(" ","Mean","Standard deviation")
+
+kable(z) %>% kable_styling(bootstrap_options = "striped",full_width = F)
+```
+  
+**#REGRESSION ESTIMATES POPULATION & SAMPLE**
+  
+Regression for Population
+```{r,echo=FALSE}
+library(ggpubr)
+mfit=lm(w~ed,dd)
+summary(mfit)
+
+ggplot(dd,aes(x=ed,y=w))+geom_point()+geom_smooth(method='lm',se=0)+xlab("Education")+ylab("Wage")+ggtitle("Regression of wage on education")+stat_regline_equation(label.x = 18, label.y = 26)
+```
+
+  
+Regression for Sample
+```{r,echo=FALSE}
+sfit=lm(w~ed,d1)
+summary(sfit)
+sfit
+ggplot(d1,aes(x=ed,y=w))+geom_point(col='red',size=2)+geom_smooth(method='lm',se=0)+stat_regline_equation(label.x = 18, label.y = 26)+xlab("Education")+ylab("Wage")+ggtitle("Regression of wage on education")
+```
+    
+**Now we attempt to find $\hat{\beta}$ for all samples***  
+```{r,echo=FALSE}
+
+sam=0
+h_b=0
+for(i in 1:1000)
+{
+  sam=ldply(all_samples[i], data.frame)
+  smfit=lm(w~ed,sam)
+  h_b[i]=smfit$coefficients[2] %>% round(2)
+}
+h_b_d=data.frame(n=1:1000,h_b)
+ggplot(data=h_b_d,aes(x=h_b,y=..density..))+geom_density(col='red')+theme_bw()+labs(title=expression("Distribution of"~widehat(beta) ))+xlab(expression(widehat(beta) ))
+
+```
+  
+The expected value of all one thousand $\hat{\beta}$s is **`r mean(h_b) %>% round(2)`** and sd is **`r sd(h_b) %>% round(2)`**.  
+  
+```{r,echo=FALSE}
+pp=c("Sample","Sampling distrbution","Population")
+qq=c(sfit$coefficients[2] %>% round(2),mean(h_b) %>% round(2),mfit$coefficients[2]%>% round(2))
+qq
+rr=c(round(sd(d1$w),2),sd(s$my_sample_mean)%>% round(2),sd(dd$w)%>% round(2))
+z=data.frame(pp,qq)
+colnames(z)=c(" ","Mean")
+
+kable(z) %>% kable_styling(bootstrap_options = "striped",full_width = F)
+```
+  
 

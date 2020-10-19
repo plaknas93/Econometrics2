@@ -1,0 +1,222 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+
+#*Problem Set 2*
+  
+##Author: Ben Lambert 
+    
+##**Solutions by RJ Neel**
+
+##**Problem 1**  
+*Draw a boxplot for the players’ wages. (If you don’t know how to do a given plot etc. then consult the user manual by clicking the ’Help’ menu). Which way are theplayers’ wages skewed? Towards infinity or zero?*  
+
+#***Solution***  
+```{r, echo=FALSE,message=FALSE}
+library(wooldridge)
+library(dplyr)
+library(ggplot2)
+library(kableExtra)
+library(ggpubr)
+#?nbasal
+#head(nbasal)
+#glimpse(nbasal)
+ggplot(data=nbasal,aes(x=wage))+geom_boxplot(col='red')+ggtitle("Boxplot: NBA Player Annual Salaries")+xlab("Wages (in Thousand $)")
+summary(nbasal$wage)
+```
+  
+The annual salary contracts of NBA players are positively skewed with more than 50% earning over **`r median(nbasal$wage)`** and average salary for each player is **`r mean(nbasal$wage) %>% round(2)`**. If Mean > Median > Mode => POSITIVE SKEW
+  
+#**Problem 2**  
+*Let’s investigate the relationships between variables in our dataset.  In practice if two variables are highly correlated with one another, then we may run into the problems caused by multicollinearity.   This will make it hard for ordinary least squares to decipher the effect of one variable from another in a regression model. One way of investigating the relationships is via their correlation. If you select the option of ’Correlation matrix’ from the ’View’ menu, and include all the variables in the dataset, this will output the bivariate correlations between all variables in the NBA dataset.  This can be a useful tool to allow one to get a quick handle on the data by seeing how strong the relationship is between different variables in your dataset.  Are there any variables that are particularly highly correlated with experience?   What would be the issue of including both of these measures in aregression with wages as the dependent variable?*
+
+#***Solution***  
+```{r, message=FALSE}
+
+library(corrplot)
+cp=cor(nbasal %>% select(wage,exper,age,coll,games,minutes,points,allstar,children),method='spearman')
+corrplot(cp,method='number')
+```
+  
+We find that the following pairs: 
+1) age & experience 
+2) minutes & games
+3) minutes and points  
+are highly correlated (>65%)
+  
+This results in the problem of multicollinearity. We won't be able to estimate OLS parameters.
+
+#**Problem 3**  
+*Another useful aspect of a correlation matrix is that it can give you a feel for which variables are correlated with your dependent variable. Which variables (other than the log of wages), show the highest correlation with wages?*    
+#***Solution***  
+```{r,echo=FALSE,message=FALSE}
+cor(nbasal) %>% round(1)
+```
+  
+We see that wage is highly correlated (>0.3) with *experience,age,games, minutes, points, rebound, assists,allstar, avgmin, experience square and age square
+
+##**Problem 4**  
+*Graphically  investigate  whether  players  who  are  more  experienced  earn  more. How strong is the correlation between these two variables?*  
+
+#***Solution***  
+```{r,echo=FALSE,message=FALSE}
+cor(nbasal$wage,nbasal$exper)
+ggplot(nbasal,aes(x=exper,y=wage))+geom_point(col='dark green')+ggtitle("Scatterplot: Wage vs Experience")+stat_cor(label.x = 14, label.y = 5000) 
+```
+  
+##**Problem 5**  
+*Create an ordinary least squares model which investigates how experience affects a player’s wages.*
+
+#***Solution***  
+```{r,echo=FALSE,message=FALSE}
+fit=lm(formula=wage~exper,data=nbasal)
+summary(fit)
+ggplot(nbasal,aes(x=exper,y=wage))+geom_point(col='dark green')+ggtitle("OLS Model: Wage~ Experience")+geom_smooth(method='lm',se=FALSE)+stat_regline_equation(label.x = 14, label.y = 5500) 
+```
+  
+##**Problem 6**  
+*What is the average wage increase associated with an increase in experience by one year implied by your model?*  
+
+#***Solution***  
+For every 1 additional year of experience one can expect the wage to increase by **`r fit$coefficients[2] %>% round(2)`** thousand dollars.
+    
+##**Problem 7**  
+*Do you think that the estimates of the effect of experience on wages is likely too big or too small? Which Gauss-Markov assumption is being violated, and why?*    
+
+#***Solution***   
+In my view this coefficient likely overstates the effect of experience on wages, since those who are better tend to be employed as professional basketball players forlonger, and hence are paid more.  In other words there is another third variable’quality’ which is causing both wages and experience to be higher.  A measure of player's quality is contained within the variables:  'points', 'minutes', 'rebounds', etc.   variables.   So  their  inclusion  is  likely  to  bring  the  estimate  of  the  effect  of experience down.
+  
+##**Problem 8**  
+*Create  another  regression  with  wages  as  a  dependent  variable,  and  age  as  the independent variable (along with a constant). Does this imply that the effect of age is positive or negative?*    
+  
+#***Solution***   
+```{r,echo=FALSE,message=FALSE}
+fit2=lm(formula=wage~age,data=nbasal)
+summary(fit2)
+ggplot(nbasal,aes(x=age,y=wage))+geom_point(col='red')+ggtitle("OLS Model: Wage~Age")+geom_smooth(method='lm',se=FALSE)+stat_regline_equation(label.x = 36, label.y = 5500)
+
+#Salary Predictions for Problem 9
+sal30=predict(fit2,data.frame(age=c(30))) %>% round(2)
+sal90=predict(fit2,data.frame(age=c(90))) %>% round(2)
+act_30= nbasal %>% select(wage,age) %>% filter(age==30) %>% summarize(mean(wage)) %>% round(2)
+```
+  
+##**Problem 9**  
+*What would would be the average wage implied by your model for an individual of 30? What about for a 90 year old? What is the problem with the latter estimate?*    
+    
+#***Solution***   
+The expected annual salary of a 30 year old NBA player is predicted to be **$`r sal30` Thousand**. The observed average salary for a 30 year old NBA player is **$`r act_30` Thousand**. For a 90 year old it is expected to be **$`r sal90` Thousand**.  
+
+While the predicted value for 30 year old seems sound and reasonable but for 90 year old the salary expectations are absurd esp a athelete who slowsdown with age. This latter prediction is completely **out of sample**,and also very unrealistic.  One has to be very careful when extending the results of a regression to make out of sample predictions. ***(Out of sample here means thatwe currently do not have any data for the wages of 90 year old basketball players.)***
+  
+##**Problem 10**  
+*How  might  we  rectify  the  issue  of  the  unrealistic  estimates  from  the  previousmodel?*  
+#***Solution***     
+One way might be to include the square of the age in the regression, as this wouldsuggest that there might be diminishing marginal returns to age.  
+The OLS regression outcome for such a model would be:  
+```{r,echo=FALSE,message=FALSE}
+fit3=lm(formula=wage ~ age + agesq, data=nbasal)
+summary(fit3)
+
+#Salary Predictions for Problem 9 with age 30 and 90 using agesq model
+sal30_2=predict(fit3,data.frame(age=c(30),agesq=c(30))) %>% round(2)
+sal90_2=predict(fit3,data.frame(age=c(90),agesq=c(90))) %>% round(2)
+```
+    
+Using the age square model the expected annual salary of a 30 year old NBA player is predicted to be **$`r sal30_2` Thousand**. The observed average salary for a 30 year old NBA player is **$`r act_30`** Thousand. For a 90 year old it is expected to be **$`r sal90_2` Thousand**. <span style="color: red;">OBVIOSLY NO MAJOR IMPROVEMENT IN THE MODEL. Perhaps we must best resist out of sampling predictions.</span> 
+
+##**Problem 11**    
+*Now create a regression withbothexperience and age in the model.   What hashappened to the sign of the coefficient on age? Why has this happened?*  
+
+#***Solution***     
+```{r,echo=FALSE,message=FALSE}
+fit4=lm(formula=wage ~ age + exper, data=nbasal)
+summary(fit4)
+
+```
+    
+The sign on age has now turned ***<span style="color: red;">NEGATIVE</span>***. It was previously positive. The coefficient on experience has nearly ***doubled***. This unstable change in the coefficient values is due to high **multicollinearity** between **age** and **experience**.      
+  
+##**Problem 12**    
+*Let’s now try to examine whether individuals who score more points tend to earnmore by creating a regression of wages on points per game (and a constant). *  
+
+#***Solution***     
+```{r,echo=FALSE,message=FALSE}
+fit5=lm(formula=wage~points,data=nbasal)
+summary(fit5)
+ggplot(nbasal,aes(x=points,y=wage))+geom_point(col='red')+ggtitle("OLS Model: wage~points")+geom_smooth(method='lm',se=FALSE)+stat_regline_equation(label.x = 20, label.y = 5500)
+```
+    
+An increase of 10 points will result in a wage increase of **$`r (fit5$coefficients[2])*10 %>% round(2)` Thousands**.
+
+##**Problem 13**    
+*You can look at a graph of the residuals (the estimated errors) from the regression, by  clicking  into  the  model  (if  you  are  not  already  in  the  model  window),  andnavigating  to  Graphs→Residual  plot.    There  are  then  a  number  of  differentoptions available, from seeing a plot of residuals against observation number toseeing a plot against the values of experience. Which of these plots should you useto graphically inspect for heteroscedasticity?*  
+  
+#***Solution***     
+```{r,echo=FALSE,message=FALSE}
+fit5=lm(formula=wage~points,data=nbasal)
+ggplot(fit5, aes(x = points, y = .resid)) + geom_point(col='salmon')+ggtitle("Residual Plot: wage~points")+xlab("Points")+ylab("Residuals")
+
+library(ggfortify)
+autoplot(fit5)
+```
+  
+##**Problem 14**    
+*Does there appear to be heteroscedasticity? What might be causing it? How mightwe rectify it?*    
+#***Solution***     
+We do see an issue of **Heteroskedstacity**. The variance for errors does not seem to be constants and is increasing as points increases. There is definitely evidence of systematic increases in the variance of our estimates as points increases from 0-15.  There is then a decline in variance towards the latter end of the points spectrum.  This makes intuitive sense.  When players score few points, they are not paid much.  When they score a reasonable number of points they tend to be paid more, but there is a higher variance.  This could  be  because  of  the  fact  that  players  on  a  basketball  team  occupy  different positions - some are more focussed on scoring, others on defending.  This would mean that once a threshold number of points is reached the players are paid more or less dependent on their respective abilities in their positions. When a player scores a high number of points, they are in short supply, and can hence command a higher wage.
+  
+##**Problem 15**    
+*Do you think that the effect of points on wages predicted by your model is too highor low? Why might this be the case?*      
+#***Solution***     
+I  suspect  it  is  too  high.    There  is  probably  some  reverse  causality  happening,whereby players that are paid more tend to score more points.  Also, points likelyalso captures some of the effects of other variables that are important in determiningwages. For example, players from better teams have better team mates, and hencetend to have more chances to score.   At the same time the players on the betterteams tend to be paid more.
+  
+##**Problem 16 & 17**    
+*Create two new variables in R:  ’pointsq’ and ’pointsc’equal to the square of points and its cube respectively.  Now create two new regression models (keeping your current regression of wageson points):*
+
+$wage_i=α+β_1points_i+β_2points^2_i$
+
+$wage_i=α+β_1points_i+β_2points^2_i+β_3points^3_i$      
+  
+(a)  Which of these regressions has the highest value of R-squared?  What doesthis mean?  
+(b)  What is the interpretation of the coefficient on ’pointsc’ in the last regression model?  
+(c)  Which of these regressions has the highest value of adjusted R-squared?  
+(d)  Out of the three specifications, which would you prefer?  
+  
+#***Solution***     
+```{r,echo=FALSE,message=FALSE}
+data=nbasal %>% select(wage,points) %>% mutate(pointsq=points^2,pointsc=points^3)
+
+fit6=lm(formula=wage~points+pointsq,data=data)
+summary(fit6)
+
+fit7=lm(formula=wage~points+pointsq+pointsc,data=data)
+summary(fit7)
+
+```  
+    
+(a)  The latter model has a higher R-squared of 0.44.  This means that these inde-pendent variables explain 44% of the variation in the dependent variable.  
+(b)  This would suggest that there is diminishing diminishing (yep two diminish-ings!) marginal returns to points. In other words it is pretty nonsensical.  
+(c)  The last regression still has the highest adjusted R-squared.  
+(d)  The first regression (with only wages regressed on points), since it is parsi-monious, and has a clear interpretation.  The latter of the three especially is overfitting the data. I include the last regression fitted residuals below so you can see for yourself. Don’t let apophenia (seeing meaningless patterns in data) get the better of you - a linear line is still better than this curve    
+  
+```{r,echo=FALSE,message=FALSE}
+d=data.frame(points=data$points,obs_wage=data$wage,pred_wage=fit7$fitted.values)
+
+ggplot(d)+geom_point(aes(x=points,y=obs_wage,col='Observed'))+geom_point(aes(x=points,y=pred_wage,col='Predicted'))+ggtitle("Observed vs Actual data for wage~points+pointsq+pointsc")+ylab('wage')
+```
+    
+##**Problem 18**    
+*Freestyle: try to create a model which you believe captures explains players wages best in terms of other attributes*   
+
+#***Solution***  
+  
+$wage_i=α+β_1points_i+β_2exper^2_i+\beta_3games$
+  
+```{r,echo=FALSE,message=FALSE}
+
+fit8=lm(formula=wage~points+expersq+games,data=nbasal)
+summary(fit8)
+```    
