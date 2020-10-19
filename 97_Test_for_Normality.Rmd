@@ -1,0 +1,69 @@
+
+#NORMALITY TESTS IN ECONOMETRICS USING R  
+##Author: R J Neel  
+###Referene: Ben Lambert Econometrics Course, Introductory Econometrics: A modern approach by J Wooldrige, Econometric Analysis by W. Greeene
+    
+Let us consider an example from the **wage1** dataset. Here, we test the relationship between wage and education and experience.
+```{r,echo=FALSE,message=FALSE}
+#To test the relation between education, experience and wage
+library(wooldridge)
+library(ggplot2)
+library(gridExtra)
+library(dplyr)
+data=wage1
+
+head(data)
+
+#Regression function Wage= f(education, experience)
+
+p1=ggplot(data, aes(x=educ,y=wage))+geom_point(col="orange")+ggtitle("Wage vs Education")+xlab("Education")+ylab("Wage")+geom_smooth(method='lm',se=0)
+p2=ggplot(data, aes(x=exper,y=wage))+geom_point(col="red")+ggtitle("Wage vs Experience")+xlab("Experience")+ylab("Wage")+geom_smooth(method='lm',se = 0)
+
+grid.arrange(p1,p2,ncol=2)
+
+```
+  
+We devise the following model:  
+wage=f(education, experience)
+
+Therefore, we devise the following model:  
+$Wage=\beta_0 + \beta_1*Education +\beta_2*Experience$
+  
+The result of regression is   
+```{r,echo=FALSE, message=FALSE}
+fit=lm(wage~educ+exper,data)
+fit
+summary(fit)
+a=fit$coefficients[1] %>% round(2)
+b1=fit$coefficients[2] %>% round(2)
+b2=fit$coefficients[3] %>% round(2)
+```
+  
+Thus, we have $Wage=`r a`+`r b1`*Education +`r b2`*Experience$
+  
+  
+Now, we test for **NORMALITY**  
+
+Let us see the distribution of wages
+```{r,echo=FALSE, message=FALSE}
+ggplot(data, aes(x=wage))+geom_histogram(col="red",fill='orange')+ggtitle("Distribution of Wage")+xlab("Wage")+ylab("Frequency")
+```
+  
+Prima facie it looks like the distribution is **skewed** towards the right.
+  
+Let us conduct all the normality tests  
+
+**[1]Visual Tests**
+```{r,echo=FALSE, message=FALSE}
+library(ggpubr)
+# Density plot
+p3=ggdensity(data$wage, fill = "orange")+ggtitle('Density plot for Wages')
+# QQ plot
+p4=ggqqplot(data$wage,col='orange')+ggtitle('QQ plot for Wages')
+grid.arrange(p3,p4,ncol=2)
+```  
+  
+
+
+
+
