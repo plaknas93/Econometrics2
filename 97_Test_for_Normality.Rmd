@@ -34,6 +34,7 @@ The result of regression is
 fit=lm(wage~educ+exper,data)
 fit
 summary(fit)
+anova(fit)
 a=fit$coefficients[1] %>% round(2)
 b1=fit$coefficients[2] %>% round(2)
 b2=fit$coefficients[3] %>% round(2)
@@ -87,5 +88,42 @@ As is in the case for Jarque-Berra test, In Shapiro-Wilkins test too = our
 A p value of $<0.05$ implies That the test stastic lies in the <span style="color: red;">REJECTION REGION</span>. Therefore, We **fail** to conclude that the distribution is **NORMAL**. It was already hinted in the Visual tests.  
 
 Shapiro-wilk is the more preferred test.  
+    
+**Let us now repeat the exercise with Log(wages)**    
+Let us see the distribution of Log(wages)  
+```{r,echo=FALSE, message=FALSE}
+ggplot(data, aes(x=log(wage)))+geom_histogram(col="red",fill='orange')+ggtitle("Distribution of Ln(Wage)")+xlab("Ln(wage)")+ylab("Frequency")
+```
+  
+Prima facie it does **NOT** look **NORMAL**
+  
+Let us conduct all the normality tests  
+  
+**[1]Visual Tests**  
+```{r,echo=FALSE, messages=FALSE}
+# Density plot
+p5=ggdensity(log(data$wage), fill = "orange")+ggtitle('Density plot for wages')
+# QQ plot
+p6=ggqqplot(log(data$wage),col='orange')+ggtitle('QQ plot for wages') 
+grid.arrange(p5,p6,ncol=2)
+```  
+    
+**[2]Jarque-Berra Test**  
+```{r,echo=FALSE, messages=FALSE}
+library(tseries)
+library(normtest)
+jarque.bera.test(log(data$wage))
+```  
+  
+**INTERPRETATION**  
+The p value has increased but it is still $<0.05$ implies That the test stastic lies in the <span style="color: red;">REJECTION REGION</span>. Therefore, We **fail** to conclude that the distribution is **NORMAL**. It was already hinted in the Visual tests.  
+    
+**[3]Shapiro-Wilk Test**  
+```{r,echo=FALSE, messages=FALSE}
+shapiro.test(log(data$wage))
+```  
+  
+As is in the case for Jarque-Berra test, In Shapiro-Wilkins test too it fails to prove **NORMALITY**
+
 
 
