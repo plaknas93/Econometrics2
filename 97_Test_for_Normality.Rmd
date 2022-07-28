@@ -1,3 +1,9 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
 
 #NORMALITY TESTS IN ECONOMETRICS USING R  
 ##Author: R J Neel  
